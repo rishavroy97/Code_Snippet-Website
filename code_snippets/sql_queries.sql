@@ -1,0 +1,4 @@
+CREATE DATABASE `codesnippets`;
+USE `codesnippets`;
+CREATE TABLE `codesnippets`.`users` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , `email` VARCHAR(255) NOT NULL , `username` VARCHAR(255) NOT NULL , `password` VARCHAR(255) NOT NULL , `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = MyISAM CHARSET=utf8 COLLATE utf8_unicode_ci;
+CREATE TABLE `codesnippets`.`codes` ( `id` INT(11) NOT NULL AUTO_INCREMENT , `username` VARCHAR(255) NOT NULL , `codeid` VARCHAR(255) NOT NULL , `description` TEXT NOT NULL , `code` TEXT NOT NULL , `status` VARCHAR(100) NOT NULL DEFAULT 'public' , `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , PRIMARY KEY (`id`)) ENGINE = MyISAM CHARSET=utf8 COLLATE utf8_unicode_ci;
