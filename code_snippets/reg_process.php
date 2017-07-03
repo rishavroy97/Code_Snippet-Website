@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,12 +14,10 @@
 <h1>&lt;Code Snippets/&gt;</h1>
 </div>
 <?php
-    
-    session_start();
 
 	require_once('config.php'); 
 
-    $success = 0;
+    $success = NULL;
     $message = NULL;
     $email = NULL;
     $password = NULL;
@@ -44,12 +45,13 @@
             {
                 $name = $Results['name'];
                 $username = $Results['username'];
-                $message = $Results['name']." Login Sucessfully!!";
+                $message = " Login Sucessful!!";
                 $success = 1;
             }
             else
             {
                 $message = "Invalid email or password!!";
+                $success = 0;
                 
             }        
         }
@@ -69,9 +71,11 @@
             if(!preg_match('/^\w{0,}$/', $username)) { 
             // valid username is alphanumeric & longer than or equals 5 chars
                 $message = "username cannot consist of special characters";
+                $success = 0;
             }
             else if (count($username_result)>=1) {
-                $message = "'".$username."' username already exist!!";                   
+                $message = "'".$username."' username already exist!!";
+                $success = 0;                   
             }
             else{
                 $query = "SELECT email FROM users where email='".$email."'";
@@ -80,21 +84,25 @@
                 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) // Validate email address
                 {
                     $message =  "Invalid email address please type a valid email!!";
+                    $success = 0;
                 }
                 elseif($numResults>=1)
                 {
                     $message = $email." Email already exist!!";
+                    $success = 0;
                 }
                 elseif($password == ""){
                     $message = "Password field cannot be empty";
+                    $success = 0;
                 }
                 elseif($username == ""){
                     $message = "Username field cannot be empty";
+                    $success = 0;
                 }
                 else
                 {
                     mysqli_query($connection,"insert into users(name,email,username,password) values('".$name."','".$email."','".$username."','".md5($password)."')");
-                    $message = "Signup Sucessfully!!";
+                    $message = "Signup Sucessful!!";
                     $success = 1;
                 }
             }
@@ -102,21 +110,19 @@
     }
 	
     if ($success == 1) {
-        echo "$message";
-        echo '<form method="post" action="homepage.php" id = "successform">
-                  <input type="hidden" name="email" value="'.$email.'">
-                  <input type="hidden" name="name" value="'.$name.'">
-                  <input type="hidden" name="password" value="'.md5($password).'">
-                  <input type="hidden" name="username" value="'.$username.'">
-              </form>';
-        echo '<script type="text/javascript">
-        document.getElementById("successform").submit();
-        </script>';
+        
+        $_SESSION['email'] = $email;
+        $_SESSION['name'] = $name;
+        $_SESSION['password'] = md5($password);
+        $_SESSION['username'] = $username;
+        $_SESSION['reg_msg'] = $message;
+
+        header("Location: homepage.php");        
     }
-    else{
+    else if ($success == 0){
         header("Location: login_signup.php");
+        $_SESSION['reg_msg'] = $message;
     }
-    $_SESSION['reg_msg'] = $message;
 ?>
 
 
