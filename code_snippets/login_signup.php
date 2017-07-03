@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +41,6 @@
 		  </div>
 	   </div>
 		<?php
-		session_start();
 		require_once('config.php'); 
 		if (isset($_SESSION['reg_msg'])) {
 
